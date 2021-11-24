@@ -1,6 +1,7 @@
 from aiogram import executor
 from dispatcher import dp
-import handlers
+import library_handlers
+import searching_handlers
 
 
 if __name__ == "__main__":
