@@ -1,4 +1,4 @@
 # LibraBot
-Chat-bot for Libra library users.  
+Чат-бот для користувачів бібліотеки "Libra" ♎️  
   
-  ![image](https://user-images.githubusercontent.com/69078357/142431027-ac8ea360-a3cc-4d11-9536-7054b9371490.png)
+  ![Screenshot from 2021-11-26 00-13-34](https://user-images.githubusercontent.com/69078357/143503984-4a55d1f5-7926-4e27-8fb2-29d1e562f176.png)
