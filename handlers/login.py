@@ -1,13 +1,13 @@
-from phonenumbers import is_possible_number, parse, NumberParseException
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from phonenumbers import is_possible_number, parse, NumberParseException
 
-import keyboards
-from LibraLibrary import libra_library
-from handlers.common import cancel
 from dispatcher import dp
+import keyboards
+from handlers.common import cancel
+from LibraLibrary import libra_library
 
 
 class UserLogin(StatesGroup):
@@ -22,6 +22,7 @@ async def login_start(message: types.Message):
     await UserLogin.waiting_for_phone_number.set()
 
 
+# This code is duplicated. This will be fixed
 @dp.message_handler(state=UserLogin.waiting_for_phone_number)
 async def phone_number_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
