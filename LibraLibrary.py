@@ -1,19 +1,20 @@
 import mysql.connector
 from sqlalchemy import create_engine
-from config import *
+import config
 
 
 class LibraLibrary:
 
     def __init__(self):
         self.library_db = mysql.connector.connect(
-            host=library_db_host,
-            user=library_db_user,
-            password=library_db_password
+            host=config.library_db_host,
+            user=config.library_db_user,
+            password=config.library_db_password
         )
         self.engine = create_engine(
-            f"{library_db_dialect}+{library_db_driver}://{library_db_user}:"
-            f"{library_db_password}@{library_db_host}/{library_db_name}")
+            f"{config.library_db_dialect}+{config.library_db_driver}://"
+            f"{config.library_db_user}:{config.library_db_password}@"
+            f"{config.library_db_host}/{config.library_db_name}")
         self.connection = self.engine.connect()
 
     def find_phone_number(self, phone_number):
@@ -27,6 +28,9 @@ class LibraLibrary:
         return True
 
     def view_library_card(self):
+        pass
+
+    def find_book(self):
         pass
 
     def order_book(self):

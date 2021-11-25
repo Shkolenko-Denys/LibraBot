@@ -1,5 +1,5 @@
 from phonenumbers import is_possible_number, parse, NumberParseException
-from aiogram import Dispatcher, types
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
@@ -7,6 +7,7 @@ from aiogram.dispatcher.filters import Text
 import keyboards
 from LibraLibrary import libra_library
 from handlers.common import cancel
+from dispatcher import dp
 
 
 class UserLogin(StatesGroup):
@@ -14,12 +15,14 @@ class UserLogin(StatesGroup):
     waiting_for_password = State()
 
 
+@dp.message_handler(Text(equals="Увійти 🧑‍💻"))
 async def login_start(message: types.Message):
     await message.answer("Введіть номер телефону 📞:",
                          reply_markup=keyboards.CancelKeyboard.keyboard)
     await UserLogin.waiting_for_phone_number.set()
 
-# this func is duplicated. This will be fixed
+
+@dp.message_handler(state=UserLogin.waiting_for_phone_number)
 async def phone_number_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -47,6 +50,7 @@ async def phone_number_input(message: types.Message, state: FSMContext):
     await UserLogin.waiting_for_password.set()
 
 
+@dp.message_handler(state=UserLogin.waiting_for_password)
 async def password_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -61,13 +65,3 @@ async def password_input(message: types.Message, state: FSMContext):
             "Пароль не вірний 🤔 Спробуйте ще раз",
             reply_markup=keyboards.StartKeyboard.keyboard)
     await state.finish()
-
-
-def register_handlers_login(dp: Dispatcher):
-    dp.register_message_handler(login_start,
-                                Text(equals="Увійти 🧑‍💻"),
-                                state="*")
-    dp.register_message_handler(phone_number_input,
-                                state=UserLogin.waiting_for_phone_number)
-    dp.register_message_handler(password_input,
-                                state=UserLogin.waiting_for_password)

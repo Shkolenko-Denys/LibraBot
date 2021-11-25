@@ -1,5 +1,5 @@
 from phonenumbers import is_possible_number, parse, NumberParseException
-from aiogram import Dispatcher, types
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
@@ -7,6 +7,7 @@ from aiogram.dispatcher.filters import Text
 import keyboards
 from LibraLibrary import libra_library
 from handlers.common import cancel
+from dispatcher import dp
 
 
 class UserRegister(StatesGroup):
@@ -21,12 +22,14 @@ class UserRegister(StatesGroup):
     waiting_for_passport_number = State()
 
 
+@dp.message_handler(Text(equals="Зареєструватись ✍"))
 async def register_start(message: types.Message):
     await message.answer("Введіть прізвище:",
                          reply_markup=keyboards.CancelKeyboard.keyboard)
     await UserRegister.waiting_for_surname.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_surname)
 async def surname_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -37,6 +40,7 @@ async def surname_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_name.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_name)
 async def name_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -47,6 +51,7 @@ async def name_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_patronymic.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_patronymic)
 async def patronymic_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -57,6 +62,7 @@ async def patronymic_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_birthday.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_birthday)
 async def birthday_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -67,7 +73,7 @@ async def birthday_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_phone_number.set()
 
 
-# this func is duplicated. This will be fixed
+@dp.message_handler(state=UserRegister.waiting_for_phone_number)
 async def phone_number_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -96,6 +102,7 @@ async def phone_number_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_email.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_email)
 async def email_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -106,6 +113,7 @@ async def email_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_telegram_username.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_telegram_username)
 async def telegram_username_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -116,6 +124,7 @@ async def telegram_username_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_address.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_address)
 async def address_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -126,6 +135,7 @@ async def address_input(message: types.Message, state: FSMContext):
     await UserRegister.waiting_for_passport_number.set()
 
 
+@dp.message_handler(state=UserRegister.waiting_for_passport_number)
 async def passport_number_input(message: types.Message, state: FSMContext):
     if message.text == "Скасувати ❌":
         await cancel(message, state)
@@ -146,27 +156,3 @@ async def passport_number_input(message: types.Message, state: FSMContext):
             "Щось пішло не так 🤔 Спробуйте ще раз",
             reply_markup=keyboards.StartKeyboard.keyboard)
     await state.finish()
-
-
-def register_handlers_register(dp: Dispatcher):
-    dp.register_message_handler(
-        register_start, Text(equals="Зареєструватись ✍"), state="*")
-    dp.register_message_handler(
-        surname_input, state=UserRegister.waiting_for_surname)
-    dp.register_message_handler(
-        name_input, state=UserRegister.waiting_for_name)
-    dp.register_message_handler(
-        patronymic_input, state=UserRegister.waiting_for_patronymic)
-    dp.register_message_handler(
-        birthday_input, state=UserRegister.waiting_for_birthday)
-    dp.register_message_handler(
-        phone_number_input, state=UserRegister.waiting_for_phone_number)
-    dp.register_message_handler(
-        email_input, state=UserRegister.waiting_for_email)
-    dp.register_message_handler(
-        telegram_username_input,
-        state=UserRegister.waiting_for_telegram_username)
-    dp.register_message_handler(
-        address_input, state=UserRegister.waiting_for_address)
-    dp.register_message_handler(
-        passport_number_input, state=UserRegister.waiting_for_passport_number)

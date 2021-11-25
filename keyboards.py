@@ -15,9 +15,8 @@ class StartKeyboard:
 
 
 class LibraryBooksKeyboard:
-    random_btn = KeyboardButton("Випадкова книга 🎲")
     back_btn = KeyboardButton("⬅ Повернутися")
-
+    random_btn = KeyboardButton("Випадкова книга 🎲")
     top_btn = KeyboardButton("Найпопулярніші книги 🏆")
     genre_button = KeyboardButton("Книги за жанром 👀")
 
@@ -39,9 +38,8 @@ class GenresKeyboard:
 
 
 class GoogleBooksKeyboard:
-    title_btn = KeyboardButton("Шукати за назвою 📔")
     back_btn = KeyboardButton("⬅ Повернутися")
-
+    title_btn = KeyboardButton("Шукати за назвою 📔")
     author_btn = KeyboardButton("Шукати за автором 🙍")
     title_and_author_button = KeyboardButton("Шукати за автором і назвою 🙍📔")
 
