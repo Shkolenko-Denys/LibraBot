@@ -2,12 +2,12 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 class StartKeyboard:
-    login_btn = KeyboardButton("Login")
-    register_btn = KeyboardButton("Register")
-    view_card_btn = KeyboardButton("View your library card")
-    order_book_btn = KeyboardButton("Order a book")
-    play_games_btn = KeyboardButton("Play games")
-    search_books_btn = KeyboardButton("Search books with Google Books")
+    login_btn = KeyboardButton("Увійти 🧑‍💻")
+    register_btn = KeyboardButton("Зареєструватись ✍")
+    view_card_btn = KeyboardButton("Переглянути карточку 🗂")
+    order_book_btn = KeyboardButton("Замовити підручник 📚")
+    play_games_btn = KeyboardButton("Грати в гру 🎲")
+    search_books_btn = KeyboardButton("Знайти на Google Books 🔎")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(login_btn).row(register_btn).row(view_card_btn)\
@@ -15,11 +15,11 @@ class StartKeyboard:
 
 
 class LibraryBooksKeyboard:
-    random_btn = KeyboardButton("Random book")
-    back_btn = KeyboardButton("⬅ Back")
+    random_btn = KeyboardButton("Випадкова книга 🎲")
+    back_btn = KeyboardButton("⬅ Повернутися")
 
-    top_btn = KeyboardButton("Top books")
-    genre_button = KeyboardButton("Books by genre")
+    top_btn = KeyboardButton("Найпопулярніші книги 🏆")
+    genre_button = KeyboardButton("Книги за жанром 👀")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(back_btn, random_btn)\
@@ -27,23 +27,29 @@ class LibraryBooksKeyboard:
 
 
 class GenresKeyboard:
-    back_btn = KeyboardButton("⬅ Back to modes")
-    drama = KeyboardButton("Drama")
-    fantasy = KeyboardButton("Fantasy")
-    comedy = KeyboardButton("Comedy")
-    sport = KeyboardButton("Sport")
-    history = KeyboardButton("History")
+    back_btn = KeyboardButton("⬅ Назад до видів")
+    drama = KeyboardButton("Драма")
+    fantasy = KeyboardButton("Фантастика")
+    comedy = KeyboardButton("Комедія")
+    sport = KeyboardButton("Спорт")
+    history = KeyboardButton("Історія")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(back_btn, drama).row(fantasy, comedy).row(sport, history)
 
 
 class GoogleBooksKeyboard:
-    title_btn = KeyboardButton("Search by title")
-    back_btn = KeyboardButton("⬅ Back")
+    title_btn = KeyboardButton("Шукати за назвою 📔")
+    back_btn = KeyboardButton("⬅ Повернутися")
 
-    author_btn = KeyboardButton("Search by author")
-    title_and_author_button = KeyboardButton("Search by title and author")
+    author_btn = KeyboardButton("Шукати за автором 🙍")
+    title_and_author_button = KeyboardButton("Шукати за автором і назвою 🙍📔")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(back_btn).row(title_btn, author_btn).row(title_and_author_button)
+
+
+class CancelKeyboard:
+    cancel_btn = KeyboardButton("Скасувати ❌")
+
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True).row(cancel_btn)
