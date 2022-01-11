@@ -1,8 +1,8 @@
+from aiogram import types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 class StartKeyboard:
-    login_btn = KeyboardButton("Увійти 🧑‍💻")
     register_btn = KeyboardButton("Зареєструватись ✍")
     view_card_btn = KeyboardButton("Переглянути карточку 🗂")
     order_book_btn = KeyboardButton("Замовити підручник 📚")
@@ -10,7 +10,7 @@ class StartKeyboard:
     search_books_btn = KeyboardButton("Знайти на Google Books 🔎")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
-        .row(login_btn).row(register_btn).row(view_card_btn)\
+        .row(register_btn).row(view_card_btn)\
         .row(order_book_btn).row(play_games_btn).row(search_books_btn)
 
 
@@ -51,3 +51,21 @@ class CancelKeyboard:
     cancel_btn = KeyboardButton("Скасувати ❌")
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True).row(cancel_btn)
+
+
+class SkipKeyboard:
+    cancel_btn = KeyboardButton("Скасувати ❌")
+    skip_btn = KeyboardButton("Пропустити ➡")
+
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
+        .row(cancel_btn, skip_btn)
+
+
+class OrderBook:
+    order_btn = types.InlineKeyboardButton(text="Замовити",
+                                           callback_data="order_book")
+    review_btn = types.InlineKeyboardButton(text="Відгук",
+                                           callback_data="review_book")
+
+    keyboard = types.InlineKeyboardMarkup(row_width=2)\
+        .add(order_btn, review_btn)

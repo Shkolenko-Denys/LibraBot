@@ -4,14 +4,25 @@ from aiogram.dispatcher.filters import Text
 
 import keyboards
 from dispatcher import dp
+from db.LibraLibrary import libra_library
 
 
 @dp.message_handler(commands="start")
 async def start_command(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer(
-        "Привіт ✌\nВикористовуй клавіатуру внизу, щоб виконувати команди 👇\n",
-        reply_markup=keyboards.StartKeyboard.keyboard)
+    name = libra_library.get_user_name(message.from_user.id)
+    if name:
+        await message.answer(
+            f"Привіт, {name} ✌\n"
+            f"Якщо потрібна допомога, тисни /help\n"
+            f"Використовуй клавіатуру внизу, щоб виконувати команди 👇\n",
+            reply_markup=keyboards.StartKeyboard.keyboard)
+    else:
+        await message.answer(
+            f"Привіт ✌\n"
+            f"Ти ще не зареєстрований, тисни /register\n"
+            f"Якщо потрібна допомога, тисни /help\n",
+            reply_markup=keyboards.StartKeyboard.keyboard)
 
 
 @dp.message_handler(Text(equals="Скасувати ❌"))

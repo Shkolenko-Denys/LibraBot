@@ -1,0 +1,76 @@
+from datetime import datetime
+
+from sqlalchemy import create_engine
+from sqlalchemy.sql import text
+from werkzeug.security import generate_password_hash
+
+import config
+from app import db
+from db.models import Book, Log
+
+
+class LibraLibrary:
+    """Class for working with the 'Libra' library database."""
+
+    def __init__(self, database=config.SQLALCHEMY_DATABASE_URI):
+        self.engine = create_engine(database)
+        self.connection = self.engine.connect()
+
+    def get_user_name(self, user_id):
+        if not isinstance(user_id, int):
+            raise TypeError("user_id must be an integer")
+        sql_content_query = text(f"""SELECT name FROM users
+                                     WHERE id = {user_id}""")
+        content = self.connection.execute(sql_content_query).fetchone()
+        if content:
+            return content[0]
+        else:
+            return None
+
+    def find_nickname(self, nickname):
+        if not isinstance(nickname, str):
+            raise TypeError("nickname must be a string")
+        sql_content_query = text("""SELECT nickname FROM users""")
+        content = self.connection.execute(sql_content_query).fetchall()
+        return nickname in list(item[0] for item in content)
+
+    def register(self, id, nickname, name, password, about_me):
+        if not isinstance(nickname, str):
+            raise TypeError("nickname must be a string")
+        if not isinstance(name, str):
+            raise TypeError("name must be a string")
+        if not isinstance(password, str):
+            raise TypeError("password must be a string")
+        if not isinstance(about_me, str):
+            raise TypeError("about_me must be a string")
+        if self.find_nickname(nickname):
+            raise ValueError("the nickname already exists")
+        sql_content_query = text(
+            f"""INSERT INTO users
+            (id, nickname, name, password_hash, about_me,
+            role_id, about_me_html, member_since)
+            VALUES
+            ({id}, '{nickname}', '{name}',
+            '{generate_password_hash(password)}', '{about_me}', 1,
+            '<p>{about_me}</p>', '{str(datetime.now())}')""")
+        self.connection.execute(sql_content_query)
+
+    def get_top5_books(self):
+        sql_content_query = text(
+            """SELECT books.id, books.title, books.pub_year,
+            authors.surnames_initials, genres.genre
+            FROM books
+            JOIN authors ON authors.id = books.author_id
+            JOIN genres ON genres.id = books.genre_id
+            ORDER BY books.numbers
+            LIMIT 5""")
+        content = self.connection.execute(sql_content_query).fetchall()
+        return content
+
+    def get_book(self, id):
+        sql_content_query = text(f"""SELECT * FROM books WHERE id = {id}""")
+        content = self.connection.execute(sql_content_query).fetchone()
+        return content
+
+
+libra_library = LibraLibrary()

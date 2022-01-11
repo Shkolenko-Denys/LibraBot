@@ -1,0 +1,8 @@
+bleach~=4.1.0
+Flask~=2.0.2
+Markdown~=3.3.6
+Werkzeug~=2.0.2
+WTForms~=3.0.1
+aiogram~=2.18
+requests~=2.27.1
+SQLAlchemy~=1.4.29
