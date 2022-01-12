@@ -64,13 +64,11 @@ class LibraLibrary:
             JOIN genres ON genres.id = books.genre_id
             ORDER BY books.numbers
             LIMIT 5""")
-        content = self.connection.execute(sql_content_query).fetchall()
-        return content
+        return self.connection.execute(sql_content_query).fetchall()
 
     def get_book(self, id):
         sql_content_query = text(f"""SELECT * FROM books WHERE id = {id}""")
-        content = self.connection.execute(sql_content_query).fetchone()
-        return content
+        return self.connection.execute(sql_content_query).fetchone()
 
     def order_book(self, user_id, book_id):
         sql_content_query = text(
@@ -90,6 +88,25 @@ class LibraLibrary:
                     ({user_id}, {book_id}, '{comment}', '{str(datetime.now())}',
                     '{str(datetime.now())}', 0)""")
         self.connection.execute(sql_content_query)
+
+    def get_genres(self):
+        sql_content_query = text("""SELECT genre FROM genres""")
+        content = self.connection.execute(sql_content_query).fetchall()
+        return list(item[0] for item in content)
+
+    def get_by_genre(self, genre):
+        if not isinstance(genre, str):
+            raise TypeError("genre must be a string")
+        sql_content_query = text(
+            f"""SELECT books.id, books.title, books.pub_year, authors.surnames_initials
+            FROM books
+            JOIN authors ON authors.id = books.author_id
+            WHERE books.id = (SELECT id FROM genres WHERE genre = '{genre}')""")
+        return self.connection.execute(sql_content_query).fetchall()
+
+    def count_books(self):
+        sql_content_query = text("""SELECT COUNT(*) FROM books""")
+        return self.connection.execute(sql_content_query).fetchone()[0]
 
 
 libra_library = LibraLibrary()

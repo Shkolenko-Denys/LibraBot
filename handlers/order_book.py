@@ -1,3 +1,5 @@
+import random
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -7,8 +9,6 @@ from db.LibraLibrary import libra_library
 from dispatcher import dp, bot
 import keyboards
 from handlers.common import cancel
-
-genres = ('ddf', 'sdsf', 'dfdf', 'qwqwq')
 
 
 @dp.message_handler(Text(equals="Замовити підручник 📚"))
@@ -20,12 +20,6 @@ async def order_book(message):
 @dp.message_handler(Text(equals="⬅ Назад до видів"))
 async def back(message):
     await message.answer("👇 Добре, обирайте вид 👇",
-                         reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
-
-
-@dp.message_handler(Text(equals="Випадкова книга 🎲"))
-async def random_book(message):
-    await message.answer("Тут буде випадкова книга",
                          reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
 
 
@@ -45,10 +39,14 @@ async def by_genre(message):
                          reply_markup=keyboards.GenresKeyboard.keyboard)
 
 
-@dp.message_handler(lambda message: message.text in genres)
+@dp.message_handler(lambda message: message.text in libra_library.get_genres())
 async def genre_books(message):
-    await message.answer("Тут будуть якісь книги",
-                         reply_markup=keyboards.GenresKeyboard.keyboard)
+    books = libra_library.get_by_genre(message.text)
+    result = f"🧩 {message.text}:\n"
+    for book in books:
+        result += f"📕 {book[1]} ({book[2]}, {book[3]}) /book{book[0]}\n"
+    await message.answer(result,
+                         reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
 
 
 @dp.message_handler(Text(startswith="/book"))
@@ -71,9 +69,16 @@ async def view_book(message):
                          reply_markup=keyboard)
 
 
+@dp.message_handler(Text(equals="Випадкова книга 🎲"))
+async def random_book(message):
+    count = libra_library.count_books()
+    message.text = f"/book{random.randint(1, count)}"
+    await view_book(message)
+
+
 @dp.callback_query_handler(lambda call: call.data.startswith("order"))
 async def order_book(call: types.CallbackQuery):
-    await call.answer(cache_time=60)
+    await call.answer(cache_time=10)
     book_id = int(call.data[5:])
     book = libra_library.get_book(book_id)
     libra_library.order_book(call.from_user.id, book_id)
@@ -86,7 +91,7 @@ class UserReview(StatesGroup):
 
 @dp.callback_query_handler(lambda call: call.data.startswith("review"))
 async def review_book(call: types.CallbackQuery):
-    await call.answer(cache_time=60)
+    await call.answer(cache_time=10)
     book_id = int(call.data[6:])
 
     await call.message.answer("Ваш відгук:",
