@@ -59,13 +59,3 @@ class SkipKeyboard:
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(cancel_btn, skip_btn)
-
-
-class OrderBook:
-    order_btn = types.InlineKeyboardButton(text="Замовити",
-                                           callback_data="order_book")
-    review_btn = types.InlineKeyboardButton(text="Відгук",
-                                           callback_data="review_book")
-
-    keyboard = types.InlineKeyboardMarkup(row_width=2)\
-        .add(order_btn, review_btn)

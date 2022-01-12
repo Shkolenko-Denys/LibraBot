@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
@@ -71,6 +71,15 @@ class LibraLibrary:
         sql_content_query = text(f"""SELECT * FROM books WHERE id = {id}""")
         content = self.connection.execute(sql_content_query).fetchone()
         return content
+
+    def order_book(self, user_id, book_id):
+        sql_content_query = text(
+            f"""INSERT INTO logs
+            (user_id, book_id, borrow_timestamp, return_timestamp, returned)
+            VALUES
+            ({user_id}, {book_id}, '{str(datetime.now())}',
+            '{str(datetime.now() + timedelta(days=60))}', 0)""")
+        self.connection.execute(sql_content_query)
 
 
 libra_library = LibraLibrary()
