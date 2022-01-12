@@ -239,7 +239,7 @@ class Book(db.Model):
     udc_id = db.Column(db.Integer, db.ForeignKey('udc.id'))
     image = db.Column(db.String(128))
     pub_year = db.Column(db.SMALLINT)
-    numbers = db.Column(db.Integer, default=5)
+    numbers = db.Column(db.Integer, default=50)
     summary = db.deferred(db.Column(db.Text, default=""))
     summary_html = db.deferred(db.Column(db.Text))
     catalog = db.deferred(db.Column(db.Text, default=""))
