@@ -1,3 +1,4 @@
+import random
 from datetime import datetime, timedelta
 
 from sqlalchemy import create_engine
@@ -68,7 +69,8 @@ class LibraLibrary:
 
     def get_book(self, id):
         sql_content_query = text(f"""SELECT * FROM books WHERE id = {id}""")
-        return self.connection.execute(sql_content_query).fetchone()
+        content = self.connection.execute(sql_content_query).fetchall()
+        return content[0]
 
     def order_book(self, user_id, book_id):
         sql_content_query = text(
@@ -107,6 +109,21 @@ class LibraLibrary:
     def count_books(self):
         sql_content_query = text("""SELECT COUNT(*) FROM books""")
         return self.connection.execute(sql_content_query).fetchone()[0]
+
+    def get_logs(self, user_id):
+        sql_content_query = text(f"""SELECT * FROM logs WHERE user_id = {user_id}""")
+        return self.connection.execute(sql_content_query).fetchall()
+
+    def count_questions(self):
+        sql_content_query = text("""SELECT COUNT(*) FROM game""")
+        return self.connection.execute(sql_content_query).fetchone()[0]
+
+    def get_question(self):
+        count = self.count_questions()
+        sql_content_query = text(
+            f"""SELECT question, answer FROM game
+            WHERE id = {random.randint(1, count)}""")
+        return self.connection.execute(sql_content_query).fetchall()[0]
 
 
 libra_library = LibraLibrary()

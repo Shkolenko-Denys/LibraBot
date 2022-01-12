@@ -1,5 +1,6 @@
 from aiogram import types
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, \
+    InlineKeyboardButton
 
 
 class StartKeyboard:
@@ -59,3 +60,14 @@ class SkipKeyboard:
 
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)\
         .row(cancel_btn, skip_btn)
+
+
+class GameKeyboard:
+    true_btn = InlineKeyboardButton(text="Правда",
+                                    callback_data="game_true")
+    false_btn = InlineKeyboardButton(text="Брехня",
+                                     callback_data="game_false")
+    finish_btn = InlineKeyboardButton(text="Закінчити гру",
+                                      callback_data="game_finish")
+    keyboard = types.InlineKeyboardMarkup(row_width=2)\
+        .add(true_btn, false_btn, finish_btn)
