@@ -81,5 +81,15 @@ class LibraLibrary:
             '{str(datetime.now() + timedelta(days=60))}', 0)""")
         self.connection.execute(sql_content_query)
 
+    def comment(self, user_id, book_id, comment):
+        sql_content_query = text(
+            f"""INSERT INTO comments
+                    (user_id, book_id, comment, create_timestamp,
+                    edit_timestamp, deleted)
+                    VALUES
+                    ({user_id}, {book_id}, '{comment}', '{str(datetime.now())}',
+                    '{str(datetime.now())}', 0)""")
+        self.connection.execute(sql_content_query)
+
 
 libra_library = LibraLibrary()

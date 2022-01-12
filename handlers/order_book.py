@@ -1,9 +1,12 @@
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+from aiogram.dispatcher.filters.state import StatesGroup, State
 
 from db.LibraLibrary import libra_library
 from dispatcher import dp, bot
 import keyboards
+from handlers.common import cancel
 
 genres = ('ddf', 'sdsf', 'dfdf', 'qwqwq')
 
@@ -77,6 +80,29 @@ async def order_book(call: types.CallbackQuery):
     await call.message.answer(f"Успішне замовлення книги {book[2]}")
 
 
+class UserReview(StatesGroup):
+    waiting_for_review = State()
+
+
 @dp.callback_query_handler(lambda call: call.data.startswith("review"))
-async def order_book(call: types.CallbackQuery):
-    await call.message.answer("Успішно теж!")
+async def review_book(call: types.CallbackQuery):
+    await call.answer(cache_time=60)
+    book_id = int(call.data[6:])
+
+    await call.message.answer("Ваш відгук:",
+                              reply_markup=keyboards.CancelKeyboard.keyboard)
+    await UserReview.waiting_for_review.set()
+
+    @dp.message_handler(state=UserReview.waiting_for_review)
+    async def review_input(message: types.Message, state: FSMContext):
+        if message.text == "Скасувати ❌":
+            await cancel(message, state)
+            return
+
+        await state.update_data(review=message.text)
+        user_data = await state.get_data()
+        libra_library.comment(message.from_user.id, book_id,
+                              user_data["review"])
+        await message.answer("Відгук додано успішно ✅",
+                             reply_markup=keyboards.StartKeyboard.keyboard)
+        await state.finish()
