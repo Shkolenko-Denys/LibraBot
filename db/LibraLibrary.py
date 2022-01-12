@@ -125,5 +125,11 @@ class LibraLibrary:
             WHERE id = {random.randint(1, count)}""")
         return self.connection.execute(sql_content_query).fetchall()[0]
 
+    def get_log(self, user_id, book_id):
+        sql_content_query = text(
+            f"""SELECT * FROM logs
+                WHERE user_id = {user_id} AND book_id = {book_id}""")
+        return self.connection.execute(sql_content_query).fetchone()
+
 
 libra_library = LibraLibrary()

@@ -14,21 +14,21 @@ async def start_command(message: types.Message, state: FSMContext):
     if name:
         await message.answer(
             f"Привіт, {name} ✌\n"
-            f"Якщо потрібна допомога, тисни /help\n"
-            f"Використовуй клавіатуру внизу, щоб виконувати команди 👇\n",
+            f"Клавіатура внизу, щоб виконувати команди 🕹\n"
+            f"Якщо потрібна допомога, тисни /help 🤷‍♂️\n",
             reply_markup=keyboards.StartKeyboard.keyboard)
     else:
         await message.answer(
             f"Привіт ✌\n"
-            f"Ти ще не зареєстрований, тисни /register\n"
-            f"Якщо потрібна допомога, тисни /help\n",
+            f"❗️Ти ще не зареєстрований, тисни /register 📝\n"
+            f"Якщо потрібна допомога, тисни /help 🤷‍♂️\n",
             reply_markup=keyboards.StartKeyboard.keyboard)
 
 
-@dp.message_handler(Text(equals="Скасувати ❌"))
+@dp.message_handler(Text(equals=["Скасувати ❌", "/cancel"]))
 async def cancel(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer("Скасовано",
+    await message.answer("Скасовано 👌",
                          reply_markup=keyboards.StartKeyboard.keyboard)
 
 
@@ -39,9 +39,16 @@ async def back_to_start_menu(message):
 
 
 @dp.message_handler(commands="help")
-async def cancel(message: types.Message, state: FSMContext):
+async def help_message(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer("Для роботи доступні такі команди:\n"
-                         "/register -- для реєстрації\n"
-                         "/game -- для гри\n",
-                         reply_markup=keyboards.StartKeyboard.keyboard)
+    await message.answer(
+        "<b>Для бота доступні команди:</b>\n"
+        "/start -- перезагрузка бота 🔁\n"
+        "/register -- реєстрація ✍\n"
+        "/cancel -- скасувати ❌\n"
+        "/title [назва] -- шукати в Google за назвою 🔍\n"
+        "/author [автор] -- шукати в Google за автором 👤\n"
+        "/at [автор] [назва] -- шукати в Google за автором і назвою 🧐\n"
+        "/game -- для гри 🎲\n",
+        reply_markup=keyboards.StartKeyboard.keyboard
+    )

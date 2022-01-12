@@ -11,7 +11,7 @@ import keyboards
 from handlers.common import cancel
 
 
-@dp.message_handler(Text(equals="Замовити підручник 📚"))
+@dp.message_handler(Text(equals="Замовити книгу 📚"))
 async def order_book(message):
     await message.answer("👇 Обирайте вид 👇",
                          reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
@@ -19,7 +19,7 @@ async def order_book(message):
 
 @dp.message_handler(Text(equals="⬅ Назад до видів"))
 async def back(message):
-    await message.answer("👇 Добре, обирайте вид 👇",
+    await message.answer("👇 Обирайте вид 👇",
                          reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
 
 
@@ -33,7 +33,7 @@ async def top_books(message):
                          reply_markup=keyboards.LibraryBooksKeyboard.keyboard)
 
 
-@dp.message_handler(Text(equals="Книги за жанром 👀"))
+@dp.message_handler(Text(equals="За жанром 👀"))
 async def by_genre(message):
     await message.answer("👇 Обирайте жанр 👇",
                          reply_markup=keyboards.GenresKeyboard.keyboard)
@@ -57,9 +57,9 @@ async def view_book(message):
                   f"Title: {book[2]}\n" \
                   f"Summary: {book[10]}\n"
 
-    order_btn = types.InlineKeyboardButton(text="Замовити",
+    order_btn = types.InlineKeyboardButton(text="Замовити 🎒",
                                            callback_data=f"order{book_id}")
-    review_btn = types.InlineKeyboardButton(text="Відгук",
+    review_btn = types.InlineKeyboardButton(text="Відгук ✍",
                                             callback_data=f"review{book_id}")
     keyboard = types.InlineKeyboardMarkup(row_width=2) \
         .add(order_btn, review_btn)
@@ -82,7 +82,12 @@ async def order_book(call: types.CallbackQuery):
     book_id = int(call.data[5:])
     book = libra_library.get_book(book_id)
     libra_library.order_book(call.from_user.id, book_id)
-    await call.message.answer(f"Успішне замовлення книги {book[2]}")
+    await call.message.answer(
+        f"Успішне замовлення ✅\n"
+        f"Книга: {book[2]}\n"
+        f"Рік: {book[8]}\n"
+        f"Повернути до {libra_library.get_log(call.from_user.id, book_id)[4][:-16]}"
+    )
 
 
 class UserReview(StatesGroup):
@@ -94,7 +99,7 @@ async def review_book(call: types.CallbackQuery):
     await call.answer(cache_time=10)
     book_id = int(call.data[6:])
 
-    await call.message.answer("Ваш відгук:",
+    await call.message.answer("Відгук ✍️",
                               reply_markup=keyboards.CancelKeyboard.keyboard)
     await UserReview.waiting_for_review.set()
 

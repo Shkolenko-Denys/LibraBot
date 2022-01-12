@@ -15,8 +15,8 @@ answer = True
 
 async def update_num_text(message: types.Message, score: int, question: str):
     with suppress(MessageNotModified):
-        await message.edit_text(f"Рейтинг: {score}\n"
-                                f"Питання: {question[0]}",
+        await message.edit_text(f"📊 Рейтинг: <b>{score}</b>\n"
+                                f"❔ Питання: {question[0]}",
                                 reply_markup=keyboards.GameKeyboard.keyboard)
 
 
@@ -26,8 +26,8 @@ async def cmd_numbers(message: types.Message):
     question = libra_library.get_question()
     global answer
     answer = question[1]
-    await message.answer(f"Рейтинг: 0\n"
-                         f"Питання: {question[0]}",
+    await message.answer(f"📊 Рейтинг: <b>0</b>\n"
+                         f"❔ Питання: {question[0]}",
                          reply_markup=keyboards.GameKeyboard.keyboard)
 
 
@@ -56,6 +56,6 @@ async def callbacks_num(call: types.CallbackQuery):
         await update_num_text(call.message, user_data[call.from_user.id],
                               question)
     elif action == "finish":
-        await call.message.edit_text(f"Результат: {user_value}")
+        await call.message.edit_text(f"⭐️ Результат: <b>{user_value}</b>")
 
     await call.answer()

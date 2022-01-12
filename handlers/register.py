@@ -1,6 +1,5 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from dispatcher import dp
@@ -16,9 +15,10 @@ class UserRegister(StatesGroup):
     waiting_for_about_me = State()
 
 
-@dp.message_handler(Text(equals=["Зареєструватись ✍", "/register"]))
-async def register_start(message: types.Message):
-    await message.answer("Придумайте унікальний нікнейм:",
+@dp.message_handler(commands="register")
+async def register_start(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer("Придумай унікальний нікнейм 🎩",
                          reply_markup=keyboards.CancelKeyboard.keyboard)
     await UserRegister.waiting_for_nickname.set()
 
@@ -30,12 +30,12 @@ async def surname_input(message: types.Message, state: FSMContext):
         return
 
     if libra_library.find_nickname(message.text):
-        await message.answer("Такий уже існує, придумайте інший:",
+        await message.answer("Такий уже існує, придумайте інший 😔",
                              reply_markup=keyboards.CancelKeyboard.keyboard)
         await UserRegister.waiting_for_nickname.set()
     else:
         await state.update_data(nickname=message.text)
-        await message.answer("Введіть ім'я:")
+        await message.answer("Ім'я:")
         await UserRegister.waiting_for_name.set()
 
 
@@ -46,7 +46,7 @@ async def name_input(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(name=message.text)
-    await message.answer("Придумайте пароль:")
+    await message.answer("Надійний пароль 🔑")
     await UserRegister.waiting_for_password.set()
 
 
@@ -57,7 +57,7 @@ async def name_input(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(password=message.text)
-    await message.answer("Напишіть коротко про себе(необов'язково):",
+    await message.answer("Коротко про себе 🏄‍♂",
                          reply_markup=keyboards.SkipKeyboard.keyboard)
     await UserRegister.waiting_for_about_me.set()
 
@@ -77,6 +77,6 @@ async def passport_number_input(message: types.Message, state: FSMContext):
     libra_library.register(message.from_user.id,
                            user_data["nickname"], user_data["name"],
                            user_data["password"], user_data["about_me"])
-    await message.answer("Реєстрація виконана успішно ✅",
+    await message.answer("Успішна реєстрація ✅",
                          reply_markup=keyboards.StartKeyboard.keyboard)
     await state.finish()

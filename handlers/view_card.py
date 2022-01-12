@@ -10,9 +10,11 @@ async def view_card(message):
     result = ""
     for log in logs:
         book = libra_library.get_book(log[2])
-        result += f"📕 {book[2]} -- {log[3]}, {log[4]}"
+        result += f"📕 <b>{book[2]}</b>\n" \
+                  f"  Дата взяття: {log[3][:-7]}\n" \
+                  f"  Дата повернення: {log[4][:-7]}\n"
         if log[5]:
-            result += " ✅Повернено\n"
+            result += "  ✅ Повернено\n\n"
         else:
-            result += " ❌Борг\n"
+            result += "  ❌ Борг\n\n"
     await message.answer(result)
