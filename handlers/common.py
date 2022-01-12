@@ -36,3 +36,12 @@ async def cancel(message: types.Message, state: FSMContext):
 async def back_to_start_menu(message):
     await message.answer(message, "👇 Окей, що далі? 👇",
                          reply_markup=keyboards.StartKeyboard.keyboard)
+
+
+@dp.message_handler(commands="help")
+async def cancel(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer("Для роботи доступні такі команди:\n"
+                         "/register -- для реєстрації\n"
+                         "/game -- для гри\n",
+                         reply_markup=keyboards.StartKeyboard.keyboard)
