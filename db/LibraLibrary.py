@@ -103,7 +103,7 @@ class LibraLibrary:
             f"""SELECT books.id, books.title, books.pub_year, authors.surnames_initials
             FROM books
             JOIN authors ON authors.id = books.author_id
-            WHERE books.id = (SELECT id FROM genres WHERE genre = '{genre}')""")
+            WHERE books.genre_id = (SELECT id FROM genres WHERE genre = '{genre}')""")
         return self.connection.execute(sql_content_query).fetchall()
 
     def count_books(self):

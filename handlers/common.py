@@ -34,7 +34,7 @@ async def cancel(message: types.Message, state: FSMContext):
 
 @dp.message_handler(Text(equals="⬅ Повернутися"))
 async def back_to_start_menu(message):
-    await message.answer(message, "👇 Окей, що далі? 👇",
+    await message.answer("👇 Окей, що далі? 👇",
                          reply_markup=keyboards.StartKeyboard.keyboard)
 
 
